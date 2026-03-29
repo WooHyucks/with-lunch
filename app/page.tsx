@@ -12,6 +12,7 @@ export default function WithLunchPage() {
   const [activeTab, setActiveTab] = useState<"customer" | "admin">("customer");
   const [selectedMenu, setSelectedMenu] = useState<string | null>(null);
   const [rating, setRating] = useState<number | null>(null);
+  const [feedbackType, setFeedbackType] = useState<string | null>(null);
 
   const handleVote = (menu: string) => {
     setSelectedMenu(menu);
@@ -166,12 +167,47 @@ export default function WithLunchPage() {
                       <h3 className="font-bold text-gray-900 text-lg sm:text-xl tracking-tight">사장님께 바로 전하는 한 마디</h3>
                     </div>
                   </div>
-                  <textarea
-                    className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl p-5 text-[15px] focus:ring-4 focus:ring-[#EB5722]/10 focus:border-[#EB5722]/50 focus:bg-white outline-none resize-none transition-all placeholder:text-gray-400 font-medium h-32 leading-relaxed"
-                    placeholder="국물이 조금 짰나요? 고기 양이 적었나요? 아니면 너무 맛있었나요? 자유롭게 남겨주세요."
-                  />
-                  <button className="w-full mt-4 bg-gray-900 hover:bg-black text-white font-bold py-4 rounded-2xl transition-all shadow-md flex justify-center items-center space-x-2 group">
-                    <span className="group-hover:translate-x-1 transition-transform">의견 보내기</span>
+                  
+                  <div className="grid grid-cols-2 gap-3 mb-4">
+                    {[
+                      { id: "양이 부족해요", icon: "🍚", text: "양이 부족해요" },
+                      { id: "음식이 식었어요", icon: "🥶", text: "음식이 식었어요" },
+                      { id: "구성이 아쉬워요", icon: "🍱", text: "구성이 아쉬워요" },
+                      { id: "직접 입력", icon: "✏️", text: "직접 입력" }
+                    ].map((option) => (
+                      <button
+                        key={option.id}
+                        onClick={() => setFeedbackType(option.id)}
+                        className={`flex items-center px-4 py-3.5 rounded-2xl border transition-all duration-200 text-sm font-bold active:scale-[0.98] ${
+                          feedbackType === option.id
+                            ? "border-[#EB5722] bg-[#FFF5F0] text-[#EB5722] shadow-[0_2px_10px_rgba(235,87,34,0.1)]"
+                            : "border-gray-100 bg-gray-50 text-gray-600 hover:border-gray-200 hover:bg-white"
+                        }`}
+                      >
+                        <span className="text-lg mr-2">{option.icon}</span>
+                        <span>{option.text}</span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {feedbackType === "직접 입력" && (
+                    <div className="animate-in fade-in zoom-in-95 duration-300">
+                      <textarea
+                        className="w-full bg-gray-50/50 border border-gray-100 rounded-2xl p-5 text-base focus:ring-4 focus:ring-[#EB5722]/10 focus:border-[#EB5722]/50 focus:bg-white outline-none resize-none transition-all placeholder:text-gray-400 font-medium h-32 leading-relaxed mt-2"
+                        placeholder="국물이 조금 짰나요? 고기 양이 적었나요? 아니면 너무 맛있었나요? 자유롭게 남겨주세요.(100% 익명)"
+                      />
+                    </div>
+                  )}
+
+                  <button 
+                    disabled={!feedbackType}
+                    className={`w-full mt-4 text-white font-bold py-4 rounded-2xl transition-all shadow-md flex justify-center items-center space-x-2 group ${
+                      !feedbackType 
+                        ? "bg-gray-300 opacity-70 cursor-not-allowed" 
+                        : "bg-gray-900 hover:bg-black active:scale-[0.98]"
+                    }`}
+                  >
+                    <span className={feedbackType ? "group-hover:translate-x-1 transition-transform" : ""}>의견 보내기</span>
                   </button>
                 </section>
               </div>
